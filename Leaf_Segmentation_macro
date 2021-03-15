@@ -1,0 +1,53 @@
+/*Created and test with ImageJ 1.53g java 1.8.0_172 64bits
+ * 
+ * For better results,do not put leafs/algae close (touching) each other and dont put anything on the leaf/algae. Also avoid things you are not interested being in the picture.
+ * 
+ * Johnny Gan behappyftw@g.ucla.edu March 2021
+ */
+
+//housekeeping
+title = getTitle();
+roiManager("reset")
+run("Select None");
+run("Set Measurements...", "fit redirect=None decimal=6");
+close("\\Others");
+setOption("BlackBackground",true);
+
+//Duplicate original image to work on copies
+run("Duplicate...", "title=Dummy");
+//change to RGB stack to remove grid
+run("RGB Stack");
+Stack.setChannel(3);
+run("Duplicate...", "title=THR");
+run("Duplicate...", "title=VARIANCE");
+
+//Create a mask to remove touching borders
+selectWindow("VARIANCE");
+run("Gaussian Blur...", "sigma=8");
+run("Unsharp Mask...", "radius=10000 mask=0.8");
+run("Maximum...", "radius=3");
+run("Variance...", "radius=12");
+
+//actual segmentation of the leaf/algae
+selectWindow("THR");
+run("Median...", "radius=12 stack");
+run("Unsharp Mask...", "radius=10000 mask=0.80 stack");
+run("Duplicate...", "use");
+run("Auto Threshold", "method=Yen white");
+imageCalculator("Max create", "THR-1", "VARIANCE");
+run("Convert to Mask");
+run("Fill Holes");
+for (i = 0; i < 10; i++) {
+	run("Dilate");
+}
+
+//get ROIs
+run("Analyze Particles...", "display add");
+selectWindow(title);
+close("\\Others");
+for (i = 0; i < roiManager("count"); i++) {
+	roiManager("Select", i);
+}
+roiManager("Show All");
+//Measure
+run("Measure");
