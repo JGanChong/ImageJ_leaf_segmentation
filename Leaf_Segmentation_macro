@@ -51,3 +51,10 @@ run("Analyze Particles...", "size="+minsize+"-Infinity circularity="+mincircular
 selectImage(title);
 roiManager("Show All");
 close("\\Others");
+
+//Measure
+run("Set Measurements...", "fit redirect=None decimal=6");
+for (i = 0; i < roiManager("count"); i++) {
+	roiManager("Select", i);	
+	run("Measure");
+}
