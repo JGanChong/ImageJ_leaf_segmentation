@@ -7,21 +7,26 @@ Johnny Gan behappyftw@g.ucla.edu March 2021
 
 For better results:
 - do not put leafs/algae close (touching) each other (they will either be segmented as one big object or kicked by the circularity filter)
+
 ![image](https://user-images.githubusercontent.com/74852180/112717062-63348100-8ea7-11eb-926d-2aa8104be86c.png)
 
 - dont put anything on the leaf/algae that could block it
+
 ![image](https://user-images.githubusercontent.com/74852180/112717069-76475100-8ea7-11eb-9b27-6037277473d8.png)
 
 - avoid things you are not interested being in the picture (empty space, scissors, paper, etc)
+
 ![image](https://user-images.githubusercontent.com/74852180/112717020-21a3d600-8ea7-11eb-9c18-a4cb12d8e129.png)
 ![image](https://user-images.githubusercontent.com/74852180/112717029-2bc5d480-8ea7-11eb-901f-cf0f116be97a.png)
 ![image](https://user-images.githubusercontent.com/74852180/112717035-2f595b80-8ea7-11eb-9428-2f64767969aa.png)
 
 - Keep imaging conditions (exposure mainly) constant between all images
 - Try to flatten leaf as much as possible (wrinkles create highlights and shadows that confuse the program)
+
 ![image](https://user-images.githubusercontent.com/74852180/112717048-426c2b80-8ea7-11eb-8b41-62cdf1cfda93.png)
 
 - avoid shadows and uneven lighting (see how left is much brigther than right. This affects the leaf/algae color/intensity)
+
 ![image](https://user-images.githubusercontent.com/74852180/112716990-033dda80-8ea7-11eb-9c28-bf604e6d4294.png)
 
 
