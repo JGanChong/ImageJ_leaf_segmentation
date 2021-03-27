@@ -47,19 +47,22 @@ Change filter with:
 
 
 From this image, the histogram is analyzed. One can change 
->HistogramBins = 128; 
+>HistogramBins = 128;
+
 To reduce the number of bins. This will "smoothen" out the peaks but lower the resolution. So if two peaks are very close together, lowering this migh merge them.
 
 The macro then uses the histogram to find the two peaks, one that represents the object (darkest peak) and the background (lightest peak). It then uses the peaks as reference to set the threshold based on the user variables:
 >LowerPeakTHR = 30; 
->
 >HigherPeakTHR = 60; 
+
 If a peak is at 100 intensity, then in this case it would select objects with intensity 70 (peak-LowerPeakTHR) to 160 (peak+HigherPeakTHR). This allows to fine tune the selection of object based on how much the intensity deviation in the object. This is why it is important for the object to be as even lighting as possible. The more even, the less deviation and better separation. If the macro is selecting too many bright areas, lower the HigherPeakTHR. if too many dark, then lower LowerPeakTHR. and vice versa.
 
 The objects are then turned into ROIs and filters
 >minsize = 1600;
+
 removes all ROIs smaller than minsize and 
 >mincircularity
+
 Removes all ROIs will lower ciruclarity than mincircularity. This can be straight lines or really iregular shapes (like touching leafs that make an L shape or star shape)
 
 
