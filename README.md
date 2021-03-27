@@ -39,9 +39,9 @@ To select which channel to use, open your image in ImageJ, then Image>Type>RGB S
 The image is then filteres with a median filter and and unsharp mask is applied to increase contrast and separation between object and background using.
 Depending on zoom and image resolution, one might have to change this values. Bigger images will have higher radius. 
 Change filter with:
->MedianRadius = 20; //Radius for Median filter
->UnsharpRadius = 100; //Unsharp Mask Radius
->UnsharpMask = 0.8; //Unsharp Mask amount
+>MedianRadius = 20; 
+>UnsharpRadius = 100; 
+>UnsharpMask = 0.8; 
 
 
 From this image, the histogram is analyzed. One can change 
@@ -49,8 +49,8 @@ From this image, the histogram is analyzed. One can change
 To reduce the number of bins. This will "smoothen" out the peaks but lower the resolution. So if two peaks are very close together, lowering this migh merge them.
 
 The macro then uses the histogram to find the two peaks, one that represents the object (darkest peak) and the background (lightest peak). It then uses the peaks as reference to set the threshold based on the user variables:
->LowerPeakTHR = 30; //Lower threshold from peak to count as object.  
->HigherPeakTHR = 60; //Higher threshold from peak to count as object.
+>LowerPeakTHR = 30; 
+>HigherPeakTHR = 60; 
 If a peak is at 100 intensity, then in this case it would select objects with intensity 70 (peak-LowerPeakTHR) to 160 (peak+HigherPeakTHR). This allows to fine tune the selection of object based on how much the intensity deviation in the object. This is why it is important for the object to be as even lighting as possible. The more even, the less deviation and better separation. If the macro is selecting too many bright areas, lower the HigherPeakTHR. if too many dark, then lower LowerPeakTHR. and vice versa.
 
 The objects are then turned into ROIs and filters
