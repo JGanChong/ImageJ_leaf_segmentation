@@ -33,14 +33,16 @@ For better results:
 Variables Explained:
 The macro works by separating the image into its RGB channels. It assumes that the object is of very different color to that of the background (and everything else) and thus uses the channel with higher separation between background and object to segment. 
 
->ColorChannel = 3; //Which color to use to segment. 1=red, 2=green, 3=blue.
+>ColorChannel = 3;
 To select which channel to use, open your image in ImageJ, then Image>Type>RGB Stack and scroll and see which one has the highest contrast.
 
 The image is then filteres with a median filter and and unsharp mask is applied to increase contrast and separation between object and background using.
 Depending on zoom and image resolution, one might have to change this values. Bigger images will have higher radius. 
 Change filter with:
 >MedianRadius = 20; 
+>
 >UnsharpRadius = 100; 
+>
 >UnsharpMask = 0.8; 
 
 
@@ -50,6 +52,7 @@ To reduce the number of bins. This will "smoothen" out the peaks but lower the r
 
 The macro then uses the histogram to find the two peaks, one that represents the object (darkest peak) and the background (lightest peak). It then uses the peaks as reference to set the threshold based on the user variables:
 >LowerPeakTHR = 30; 
+>
 >HigherPeakTHR = 60; 
 If a peak is at 100 intensity, then in this case it would select objects with intensity 70 (peak-LowerPeakTHR) to 160 (peak+HigherPeakTHR). This allows to fine tune the selection of object based on how much the intensity deviation in the object. This is why it is important for the object to be as even lighting as possible. The more even, the less deviation and better separation. If the macro is selecting too many bright areas, lower the HigherPeakTHR. if too many dark, then lower LowerPeakTHR. and vice versa.
 
