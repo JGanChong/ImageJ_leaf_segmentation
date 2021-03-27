@@ -1,53 +1,53 @@
-/*Created and test with ImageJ 1.53g java 1.8.0_172 64bits
- * 
- * For better results,do not put leafs/algae close (touching) each other and dont put anything on the leaf/algae. Also avoid things you are not interested being in the picture.
- * 
- * Johnny Gan behappyftw@g.ucla.edu March 2021
+/* Macro used to segment leafs/algae untop of a mat 
+ * Created and test with ImageJ 1.53g java 1.8.0_172 64bits Johnny Gan behappyftw@g.ucla.edu March 2021
  */
 
-//housekeeping
-title = getTitle();
-roiManager("reset")
+ 
+//************User Variables************
+MedianRadius = 20; //Radius for Median filter
+
+LowerPeakTHR = 30; //Lower threshold from peak to count as object.  
+HigherPeakTHR = 50; //Higher threshold from peak to count as object.
+//ie if peak is 100 intensity, and lower and higher threshold of 20, then get objects from 80 to 120 in intensity
+//If its selecting too many bright objects, reduce HigfherPeakTHR, if not enough, raise it. same for LowerPeakTHR
+
+minsize = 1600; //Minimum size of object to count it
+mincircularity = 0.08 //Minimium circularity. Used to removed random straight shadows and also messed up objects that are touching too much
+
+HistogramBins = 128; //Last thing to change. How many bins to find peak. value from 1-256. The less bins the more "smoothing". Peaks used to find intensity of background and intensity of object of interest.
+
+ColorChannel = 3; //Which color to use to segment. 1=red, 2=green, 3=blue.
+
+
+//************Program************
+title=getTitle(); //Get image name
 run("Select None");
-run("Set Measurements...", "fit redirect=None decimal=6");
-close("\\Others");
-setOption("BlackBackground",true);
+run("Duplicate...", "title=dup"); //duplicate work copy
+run("RGB Stack"); //Convert to RGB stack
+setSlice(ColorChannel); //Select channel to segment
+run("Duplicate...", "use"); //Duplicate and use selected channel only
+run("Median...", "radius="+MedianRadius); //Apply median filter
+run("Unsharp Mask...", "radius=30 mask=0.80"); //Unsharp mask to enhance signal
 
-//Duplicate original image to work on copies
-run("Duplicate...", "title=Dummy");
-//change to RGB stack to remove grid
-run("RGB Stack");
-Stack.setChannel(3);
-run("Duplicate...", "title=THR");
-run("Duplicate...", "title=VARIANCE");
+//Find two peaks (1 for object 1 for background)
+getHistogram(values, counts, HistogramBins);
+peaks=Array.findMaxima(counts,0);
+i=0;
+while (peaks.length > 2) {
+	peaks=Array.findMaxima(counts, i);
+	i+=1000;
+}
+Array.sort(peaks);
 
-//Create a mask to remove touching borders
-selectWindow("VARIANCE");
-run("Gaussian Blur...", "sigma=8");
-run("Unsharp Mask...", "radius=10000 mask=0.8");
-run("Maximum...", "radius=3");
-run("Variance...", "radius=12");
-
-//actual segmentation of the leaf/algae
-selectWindow("THR");
-run("Median...", "radius=12 stack");
-run("Unsharp Mask...", "radius=10000 mask=0.80 stack");
-run("Duplicate...", "use");
-run("Auto Threshold", "method=Yen white");
-imageCalculator("Max create", "THR-1", "VARIANCE");
+//set threshold according to peaks and user set value
+setThreshold((peaks[0]*3)-LowerPeakTHR, (peaks[0]*3)+HigherPeakTHR);
+//Convert to mask
+setOption("BlackBackground", true);
 run("Convert to Mask");
 run("Fill Holes");
-for (i = 0; i < 10; i++) {
-	run("Dilate");
-}
+//Analyze and find ROIs
+run("Analyze Particles...", "size="+minsize+"-Infinity circularity="+mincircularity+"-1.00 clear add");
 
-//get ROIs
-run("Analyze Particles...", "display add");
-selectWindow(title);
-close("\\Others");
-for (i = 0; i < roiManager("count"); i++) {
-	roiManager("Select", i);
-}
+selectImage(title);
 roiManager("Show All");
-//Measure
-run("Measure");
+close("\\Others");
